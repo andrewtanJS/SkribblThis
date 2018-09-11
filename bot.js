@@ -55,6 +55,20 @@ client.on("message", async message => {
     // And we get the bot to say the thing: 
     message.channel.send(sayMessage);
   }
+
+  if(command === "join") {
+    // makes the bot join the user's voice channel
+   if (message.member.voiceChannel) {
+     message.member.voiceChannel.join()
+      .then(connection => {
+        message.reply('Joined the art class!');
+      })
+      .catch(console.log);
+   } else {
+     message.reply('No art class to join :(');
+   }
+  }
+
 });
 
 client.login(config.token);
