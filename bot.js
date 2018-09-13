@@ -11,6 +11,9 @@ const config = require("./config.json");
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
 
+// The regex to check for a valid skribbl.io link
+var re = new RegExp("^(http\:\/\/skribbl\.io\/\?)", "i");
+
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
@@ -58,16 +61,59 @@ client.on("message", async message => {
 
   if(command === "join") {
     // makes the bot join the user's voice channel
-   if (message.member.voiceChannel) {
-     message.member.voiceChannel.join()
+    if (message.member.voiceChannel) {
+      message.member.voiceChannel.join()
       .then(connection => {
         message.reply('Joined the art class!');
       })
       .catch(console.log);
-   } else {
-     message.reply('No art class to join :(');
-   }
+    } else {
+      message.reply('No art class to join :(');
+    }
   }
+  
+  if(command === "disconnect") {
+    //disconnects the bot from the voice channel
+    if (client.guilds.get(message.guild.id).voiceConnection) {
+      message.member.voiceChannel.leave()
+      message.reply('Disconnected');
+    } else {
+      message.reply('...huh?');
+    }
+  }
+
+  // //TODO: fix
+  // if(command === "startclass") {
+  //   // start text-to-speech in the specified link
+  //   // If not already in a voice channel
+  //   if (client.guilds.get(message.guild.id).voiceConnection === null) {
+  //     // makes the bot join the user's voice channel
+  //     if (message.member.voiceChannel) {
+  //       message.member.voiceChannel.join()
+  //       .then(connection => {
+  //         message.reply('Joined the art class!');
+  //       })
+  //       .then(connection => {
+  //         if (args.length != 1) {
+  //           message.reply('Please specify a room to join');
+  //         } else if (!re.test(args[0])) {
+  //           message.reply('Please send a valid skribbl.io link');
+  //         } else {
+  //           message.reply('Starting art class now!')
+  //         }
+  //       })
+  //       .catch(console.log);
+  //     } else {
+  //       message.reply('No art class to join :(');
+  //     }
+  //   } else if (args.length != 1) {
+  //     message.reply('Please specify a room to join');
+  //   } else if (!re.test(args[0])) {
+  //     message.reply('Please send a valid skribbl.io link');
+  //   } else {
+  //     message.reply('Starting art class now!')
+  //   }
+  // }
 
 });
 
